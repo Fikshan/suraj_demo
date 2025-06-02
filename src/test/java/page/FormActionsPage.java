@@ -4,13 +4,9 @@ import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -84,15 +80,8 @@ public class FormActionsPage extends BasePage  {
 	private WebElement provideYourContactDetails;
 	@FindBy(xpath = "//div[text()='ElementJustToWaitForSync']")
     private WebElement waitElement;
-
-	// In FormActionsPage.java
 	@FindBy(xpath = "//div[text()='ElementJustToWaitForSync']")
 	private WebElement waitElement1;
-
-	// Usage
-	public void waitForFormSync(int timeoutInSeconds) {
-	    waitForSyncElement(waitElement1, timeoutInSeconds);
-	}
 
     
 	    public FormActionsPage(WebDriver driver){
@@ -132,10 +121,11 @@ public class FormActionsPage extends BasePage  {
 	        }
 	    }
 	    
-	    public void selectAllNo() {
+	    public void selectAllNo() throws InterruptedException {
 	        List<WebElement> allNo = driver.findElements(By.xpath(SELECT_NO_RADIOBUTTON_XPATH));
 	        for (WebElement no : allNo) 
 	        {
+	        	Thread.sleep(1000);
 	            wait.until(ExpectedConditions.elementToBeClickable(no));
 	            no.click();
 	        }
@@ -163,35 +153,23 @@ public class FormActionsPage extends BasePage  {
 	        }
 	    }
 
-
-//	    public void waitforElemnt(WebDriver driver,int duration)
-//	    {
-//	    	WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
-//	    	try 
-//	    	{
-//	    		wait.until(ExpectedConditions.visibilityOf(waitElement));
-//	    	}
-//	    	catch (Exception e)
-//	    	{
-//	//			e.printStackTrace();
-//			}
-//	    }
 	    
 	    public void waitforElemnt(int duration) {
 	        WebDriverWait localWait = new WebDriverWait(driver, Duration.ofSeconds(duration));
 	        try {
 	            localWait.until(ExpectedConditions.visibilityOf(waitElement));
 	        } catch (Exception e) {
-	            // Optionally log or handle exception
+	        	//e.printStackTrace();
 	        }
 	    }
 	    
-	    public void fillData(String[] data)  {
+	    public void fillData(String[] data) throws InterruptedException  {
 	    	{
+	    		Thread.sleep(1000);
 	    		List<WebElement> allTextBox = driver.findElements(By.xpath(TEXT_FIELD));
 	    		for(int i=0;i<data.length;i++)
 	    		{	
-	    			 wait.until(ExpectedConditions.visibilityOf(allTextBox.get(i)));
+	    			wait.until(ExpectedConditions.visibilityOf(allTextBox.get(i)));
 	    			allTextBox.get(i).sendKeys(data[i]);
 	    		}
 	    	}
@@ -316,14 +294,14 @@ public class FormActionsPage extends BasePage  {
 	        clickNext();
 	    }
 	    
-	    public void completeContactDetailsSection(String[] contactDetails) {
+	    public void completeContactDetailsSection(String[] contactDetails) throws InterruptedException {
 	        fillData(contactDetails);	       
 	        selectAllCheckBoxes();
 	        clickSave();
 	        clickNext();
 	    }
 	    
-	    public void completeProposalSection(String[] projectTitle, String[] textDetails) {        
+	    public void completeProposalSection(String[] projectTitle, String[] textDetails) throws InterruptedException {        
 	    	fillData(projectTitle);
 	    	String[] dates = Utility.generateDates();
 	        System.out.println("Today's Date: " + dates[0]);
@@ -347,8 +325,7 @@ public class FormActionsPage extends BasePage  {
 	        clickNext();
 	    }
 	    
-	    public void completeReviewSection() {
-	    	waitforElemnt(1);
+	    public void completeReviewSection() throws InterruptedException {
 	        selectAllNo();
 	        selectAllCheckBoxes();
 	        clickSave();
